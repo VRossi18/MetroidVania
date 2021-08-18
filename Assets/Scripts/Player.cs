@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rig;
+    private PlayerAudio playerAudio;
 
     //Force variables
     public float speed;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
+        playerAudio = GetComponent<PlayerAudio>();
     }
 
     // Update is called once per frame
@@ -91,6 +93,7 @@ public class Player : MonoBehaviour
         {
             if (!isJumping)
             {
+                playerAudio.PlaySFX(playerAudio.jumpSound);
                 anim.SetInteger("transition", 2);
                 rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 isJumping = true;
@@ -98,6 +101,7 @@ public class Player : MonoBehaviour
             }
             else if (doubleJump)
             {
+                playerAudio.PlaySFX(playerAudio.jumpSound);
                 anim.SetInteger("transition", 2);
                 rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 doubleJump = false;
@@ -110,6 +114,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
+            playerAudio.PlaySFX(playerAudio.hitSound);
             isAttacking = true;
             anim.SetInteger("transition", 3);
 
@@ -184,6 +189,7 @@ public class Player : MonoBehaviour
 
         if (collision.CompareTag("Coin"))
         {
+            playerAudio.PlaySFX(playerAudio.coinSound);
             GameController.instance.GetCoin();
             collision.GetComponent<Animator>().SetTrigger("hit");
             Destroy(collision.gameObject, 0.41f);
