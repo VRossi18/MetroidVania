@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     //Force variables
     public float speed;
     public float jumpForce;
-    public float health;
+    private Health healthSystem;
 
     //Checking bools
     public bool isJumping;
@@ -29,12 +29,17 @@ public class Player : MonoBehaviour
     private static Player instance;
     private void Awake()
     {
-        DontDestroyOnLoad(this);
-
         if (instance == null)
+        {
             instance = this;
-        else
-            Destroy(gameObject);
+            DontDestroyOnLoad(this);
+        }
+        else if (instance != this)
+        {
+            Destroy(instance.gameObject);
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
     }
 
     // Start is called before the first frame update
@@ -42,6 +47,7 @@ public class Player : MonoBehaviour
     {
         rig = GetComponent<Rigidbody2D>();
         playerAudio = GetComponent<PlayerAudio>();
+        healthSystem = GetComponent<Health>();
     }
 
     // Update is called once per frame
@@ -149,15 +155,16 @@ public class Player : MonoBehaviour
         if (recoveryCount >= 2f)
         {
             anim.SetTrigger("hit");
-            health--;
+            healthSystem.health--;
 
             recoveryCount = 0f;
         }
 
-        if (health <= 0 && !recovery)
+        if (healthSystem.health <= 0 && !recovery)
         {
             recovery = true;
             anim.SetTrigger("death");
+            GameController.instance.ShowGameOver();
         }
     }
 

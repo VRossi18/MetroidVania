@@ -9,9 +9,11 @@ public class GameController : MonoBehaviour
     public static GameController instance;
     public int score;
     public Text scoreText;
+    public GameObject gameoOverPanel;
 
     private void Awake()
     {
+        Time.timeScale = 1;
         instance = this;
 
         if (PlayerPrefs.GetInt("score") > 0)
@@ -31,6 +33,17 @@ public class GameController : MonoBehaviour
 
     public void NextLevel()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
+    }
+
+    public void ShowGameOver()
+    {
+        Time.timeScale = 0;
+        gameoOverPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
